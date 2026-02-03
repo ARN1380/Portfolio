@@ -1,6 +1,5 @@
 import {
   Environment,
-  OrbitControls,
   PerspectiveCamera,
   useGLTF,
   useScroll,
@@ -11,13 +10,14 @@ import lookAtPath from "@/public/models/lookAtPath-custom2.json";
 import { useMemo, useRef } from "react";
 import {
   CatmullRomCurve3,
-  MathUtils,
   PerspectiveCamera as PerspectiveCameraType,
   Vector3,
 } from "three";
+import { Perf } from 'r3f-perf'
+
 
 export default function Mountain() {
-  const { scene } = useGLTF("/models/test10.glb");
+  const { scene } = useGLTF("/models/test14.glb");
   const scroll = useScroll();
   const elapsedTime = useRef(0);
   const cameraRef = useRef<PerspectiveCameraType>(null);
@@ -35,19 +35,14 @@ export default function Mountain() {
     return new CatmullRomCurve3(points, false);
   }, []);
 
-  const step1 = new Vector3(
-    -7.8,
-    10.558431969406817,
-    10.9
-  );
+  const step1 = new Vector3(-7.8, 10.558431969406817, 10.9);
 
-  const cameraLookAt = new Vector3(0,0,0)
+  const cameraLookAt = new Vector3(0, 0, 0);
 
   useFrame((state, delta) => {
-    camCurve.getPoint(scroll.offset, state.camera.position)
-    pathCurve.getPoint(scroll.offset, cameraLookAt)
-    state.camera.lookAt(cameraLookAt)
-
+    camCurve.getPoint(scroll.offset, state.camera.position);
+    pathCurve.getPoint(scroll.offset, cameraLookAt);
+    state.camera.lookAt(cameraLookAt);
 
     // elapsedTime.current = Math.min(0.47, scroll.offset);
     // // console.log(elapsedTime.current);
@@ -55,20 +50,20 @@ export default function Mountain() {
 
     // if (curve) {
     //   state.camera.position.copy(curve.getPointAt(elapsedTime.current));
-      
+
     //     const lookAtStep1 = new Vector3(
     //       MathUtils.damp(state.camera.position.x, step1.x, 5, delta),
     //       MathUtils.damp(state.camera.position.y, step1.y, 5, delta),
     //       MathUtils.damp(state.camera.position.z, step1.z, 5, delta)
     //     );
-    //     state.camera.lookAt(lookAtStep1);      
+    //     state.camera.lookAt(lookAtStep1);
     // }
-
   });
 
   return (
     <>
       {/* <OrbitControls /> */}
+      <Perf showGraph position="top-left" />
       <PerspectiveCamera
         position={[10, 10, 10]}
         makeDefault
@@ -77,8 +72,9 @@ export default function Mountain() {
       />
       <primitive object={scene} scale={1} />
 
-      <axesHelper scale={500}/>
-      <Environment files="/HDRI/passendorf_snow_1k.exr" background={true} />
+      <axesHelper scale={500} />
+      <Environment files="/HDRI/passendorf_snow_4k.hdr" background={true} />
+    
     </>
   );
 }
