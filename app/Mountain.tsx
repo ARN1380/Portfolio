@@ -1,26 +1,31 @@
 import {
   Environment,
+  OrbitControls,
   PerspectiveCamera,
+  Preload,
   useGLTF,
   useScroll,
+  useTexture,
 } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import mountainPath from "@/public/models/cameraPath-custom2.json";
 import lookAtPath from "@/public/models/lookAtPath-custom2.json";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import {
   CatmullRomCurve3,
+  Color,
+  MathUtils,
   PerspectiveCamera as PerspectiveCameraType,
   Vector3,
 } from "three";
-import { Perf } from 'r3f-perf'
-
+import { Perf } from "r3f-perf";
 
 export default function Mountain() {
-  const { scene } = useGLTF("/models/test14.glb");
+  const { scene } = useGLTF("/models/test32.glb");
   const scroll = useScroll();
-  const elapsedTime = useRef(0);
   const cameraRef = useRef<PerspectiveCameraType>(null);
+
+  // const texture = useTexture()
 
   const camCurve = useMemo(() => {
     const points = mountainPath.points.map(
@@ -40,41 +45,59 @@ export default function Mountain() {
   const cameraLookAt = new Vector3(0, 0, 0);
 
   useFrame((state, delta) => {
-    camCurve.getPoint(scroll.offset, state.camera.position);
-    pathCurve.getPoint(scroll.offset, cameraLookAt);
+    const scrollAmount = MathUtils.clamp(scroll.offset, 0, 1);
+    camCurve.getPoint(scrollAmount, state.camera.position);
+    pathCurve.getPoint(scrollAmount, cameraLookAt);
     state.camera.lookAt(cameraLookAt);
-
-    // elapsedTime.current = Math.min(0.47, scroll.offset);
-    // // console.log(elapsedTime.current);
-    // // console.log(state.camera.position);
-
-    // if (curve) {
-    //   state.camera.position.copy(curve.getPointAt(elapsedTime.current));
-
-    //     const lookAtStep1 = new Vector3(
-    //       MathUtils.damp(state.camera.position.x, step1.x, 5, delta),
-    //       MathUtils.damp(state.camera.position.y, step1.y, 5, delta),
-    //       MathUtils.damp(state.camera.position.z, step1.z, 5, delta)
-    //     );
-    //     state.camera.lookAt(lookAtStep1);
-    // }
   });
+
+  useEffect(() => {
+    scene.traverse((object) => {
+      if (object.isMesh) {
+        object.material.side = 0;
+      }
+      if (object.name === "Mountain") {
+        object.receiveShadow = true;
+      }
+      if (object.name === "Back001") {
+        object.material.metalness = 0;
+        console.log(object.material);
+      }
+      if (object.name === "ThreeJS") {
+        object.material.color = new Color("purple");
+        console.log(object.material);
+      }
+    });
+    console.log(scene.children);
+  }, [scene]);
 
   return (
     <>
-      {/* <OrbitControls /> */}
-      <Perf showGraph position="top-left" />
+      {/* ---------- Performance ---------- */}
+      <Perf showGraph position="top-left" colorBlind />
+      <Preload all />
+
+      {/* ---------- Lights ---------- */}
+      <ambientLight intensity={1} />
+      <directionalLight position={[10, 10, 10]} intensity={4} castShadow />
+      {/* <Environment files="/HDRI/city.exr" background={true} /> */}
+
+      {/* ---------- Cameras ---------- */}
       <PerspectiveCamera
         position={[10, 10, 10]}
         makeDefault
-        fov={80}
+        fov={60}
         ref={cameraRef}
       />
+
+      {/* ---------- Controls ---------- */}
+      {/* <OrbitControls   /> */}
+
+      {/* ---------- Objects ---------- */}
       <primitive object={scene} scale={1} />
 
-      <axesHelper scale={500} />
-      <Environment files="/HDRI/passendorf_snow_4k.hdr" background={true} />
-    
+      {/* ---------- Helpers ---------- */}
+      <axesHelper scale={50} />
     </>
   );
 }

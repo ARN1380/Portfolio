@@ -3,8 +3,6 @@
 import { Canvas } from "@react-three/fiber";
 import dynamic from "next/dynamic";
 import * as THREE from "three";
-import Mountain from "./Mountain";
-import { HDRLoader } from "three/examples/jsm/Addons.js";
 import { ScrollControls } from "@react-three/drei";
 
 const Playground = dynamic(() => import("@/app/playground/Playground"), { ssr: false });
@@ -22,14 +20,10 @@ export default function Home() {
           outputColorSpace: THREE.SRGBColorSpace,
         }}
         camera={{ fov: 45, near: 0.01, far: 1000, position: [4, 2, -5] }}
-        shadows 
       >
         <color args={["white"]} attach="background" />
-        {/* <Playground /> */}
-
-        <ScrollControls  pages={30}>
-          <Mountain />
-        </ScrollControls>
+        <Playground />
+              
       </Canvas>
     </div>
   );

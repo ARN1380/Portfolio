@@ -1,11 +1,13 @@
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls, useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import { CatmullRomCurve3, Mesh, Vector3 } from "three";
-import CustomObj from "./CustomObj";
+import CustomObj from "../CustomObj";
 import curvePath from "@/public/models/testCurve2.json";
 
 export default function Playground() {
+  const { scene } = useGLTF("/models/env-test.glb");
+
   const cubeRef = useRef<Mesh>(undefined);
   const cameraRef = useRef(0);
 
@@ -16,20 +18,20 @@ export default function Playground() {
 
   console.log(curve);
 
-  useFrame((state, delta) => {
-    if (curve) {
-      if (cameraRef.current >= 1) cameraRef.current = 0;
+  // useFrame((state, delta) => {
+  //   if (curve) {
+  //     if (cameraRef.current >= 1) cameraRef.current = 0;
 
-      cameraRef.current = Math.min(cameraRef.current + delta * 0.1, 1);
-      state.camera.position.copy(curve.getPointAt(cameraRef.current));
+  //     cameraRef.current = Math.min(cameraRef.current + delta * 0.1, 1);
+  //     state.camera.position.copy(curve.getPointAt(cameraRef.current));
 
-      state.camera.lookAt(new Vector3(0, 0, 0));
-    }
+  //     state.camera.lookAt(new Vector3(0, 0, 0));
+  //   }
 
-    if (cubeRef.current) {
-      cubeRef.current.rotation.y += delta * 0.5;
-    }
-  });
+  //   if (cubeRef.current) {
+  //     cubeRef.current.rotation.y += delta * 0.5;
+  //   }
+  // });
 
   return (
     <>
@@ -50,6 +52,7 @@ export default function Playground() {
         <planeGeometry />
         <meshStandardMaterial color={"greenyellow"} />
       </mesh>
+      <primitive object={scene} />
     </>
   );
 }
