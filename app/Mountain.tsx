@@ -100,7 +100,7 @@ export default function Mountain() {
       <primitive object={scene} scale={1} />
 
       {/* ---------- Helpers ---------- */}
-      <axesHelper scale={50} />
+      {/* <axesHelper scale={50} /> */}
     </>
   );
 }
