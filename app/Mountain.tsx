@@ -8,8 +8,8 @@ import {
   useTexture,
 } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
-import mountainPath from "@/public/models/cameraPath-custom2.json";
-import lookAtPath from "@/public/models/lookAtPath-custom2.json";
+import mountainPath from "@/public/models/cameraPath.json";
+import lookAtPath from "@/public/models/lookatPath.json";
 import { useEffect, useMemo, useRef } from "react";
 import {
   CatmullRomCurve3,
@@ -19,13 +19,14 @@ import {
   Vector3,
 } from "three";
 import { Perf } from "r3f-perf";
+import { useControls } from "leva";
 
 export default function Mountain() {
-  const { scene } = useGLTF("/models/test32.glb");
+  const { ziresho } = useControls({ ziresho: 1 });
+
+  const { scene } = useGLTF("/models/test35.glb");
   const scroll = useScroll();
   const cameraRef = useRef<PerspectiveCameraType>(null);
-
-  // const texture = useTexture()
 
   const camCurve = useMemo(() => {
     const points = mountainPath.points.map(
@@ -33,7 +34,7 @@ export default function Mountain() {
     );
     return new CatmullRomCurve3(points, false);
   }, []);
-  const pathCurve = useMemo(() => {
+  const pathCurve = useMemo(() => {    
     const points = lookAtPath.points.map(
       (point) => new Vector3(point.x, point.y, point.z)
     );
@@ -56,19 +57,17 @@ export default function Mountain() {
       if (object.isMesh) {
         object.material.side = 0;
       }
-      if (object.name === "Mountain") {
-        object.receiveShadow = true;
-      }
-      if (object.name === "Back001") {
-        object.material.metalness = 0;
-        console.log(object.material);
-      }
-      if (object.name === "ThreeJS") {
-        object.material.color = new Color("purple");
-        console.log(object.material);
-      }
+      // if (object.name === "Mountain") {
+      //   object.receiveShadow = true;
+      // }
+      // if (object.name === "Back001") {
+      //   object.material.metalness = 0;        
+      // }
+      // if (object.name === "ThreeJS") {
+      //   object.material.color = new Color("purple");        
+      // }
     });
-    console.log(scene.children);
+    // console.log(scene.children);
   }, [scene]);
 
   return (
@@ -78,15 +77,19 @@ export default function Mountain() {
       <Preload all />
 
       {/* ---------- Lights ---------- */}
-      <ambientLight intensity={1} />
+      <ambientLight intensity={1.1} />
       <directionalLight position={[10, 10, 10]} intensity={4} castShadow />
-      {/* <Environment files="/HDRI/city.exr" background={true} /> */}
+      <Environment
+        files="/HDRI/passendorf_snow_1k.exr"
+        background={true}
+        environmentIntensity={0}
+      />
 
       {/* ---------- Cameras ---------- */}
       <PerspectiveCamera
         position={[10, 10, 10]}
         makeDefault
-        fov={60}
+        fov={80}
         ref={cameraRef}
       />
 
