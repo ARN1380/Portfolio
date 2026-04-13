@@ -24,7 +24,7 @@ import { useControls } from "leva";
 export default function Mountain() {
   const { ziresho } = useControls({ ziresho: 1 });
 
-  const { scene } = useGLTF("/models/test35.glb");
+  const { scene } = useGLTF("/models/test40.glb");
   const scroll = useScroll();
   const cameraRef = useRef<PerspectiveCameraType>(null);
 
@@ -34,14 +34,12 @@ export default function Mountain() {
     );
     return new CatmullRomCurve3(points, false);
   }, []);
-  const pathCurve = useMemo(() => {    
+  const pathCurve = useMemo(() => {
     const points = lookAtPath.points.map(
       (point) => new Vector3(point.x, point.y, point.z)
     );
     return new CatmullRomCurve3(points, false);
   }, []);
-
-  const step1 = new Vector3(-7.8, 10.558431969406817, 10.9);
 
   const cameraLookAt = new Vector3(0, 0, 0);
 
@@ -50,6 +48,16 @@ export default function Mountain() {
     camCurve.getPoint(scrollAmount, state.camera.position);
     pathCurve.getPoint(scrollAmount, cameraLookAt);
     state.camera.lookAt(cameraLookAt);
+
+    // apex camera fov change animation
+    if (scrollAmount >= 0.99 && cameraRef.current) {
+      cameraRef.current.fov = MathUtils.lerp(cameraRef.current.fov, 60, 0.01);
+      cameraRef.current?.updateProjectionMatrix();
+      console.log(cameraRef.current.fov);
+    } else if (cameraRef.current) {
+      cameraRef.current.fov = MathUtils.lerp(cameraRef.current.fov, 80, 0.1);
+      cameraRef.current?.updateProjectionMatrix();
+    }
   });
 
   useEffect(() => {
@@ -61,10 +69,10 @@ export default function Mountain() {
       //   object.receiveShadow = true;
       // }
       // if (object.name === "Back001") {
-      //   object.material.metalness = 0;        
+      //   object.material.metalness = 0;
       // }
       // if (object.name === "ThreeJS") {
-      //   object.material.color = new Color("purple");        
+      //   object.material.color = new Color("purple");
       // }
     });
     // console.log(scene.children);
