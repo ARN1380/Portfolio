@@ -18,11 +18,11 @@ import {
   PerspectiveCamera as PerspectiveCameraType,
   Vector3,
 } from "three";
-import { Perf } from "r3f-perf";
+// import { Perf } from "r3f-perf";
 import { useControls } from "leva";
 
 export default function Mountain() {
-  const { ziresho } = useControls({ ziresho: 1 });
+  // const { ziresho } = useControls({ ziresho: 1 });
 
   const { scene } = useGLTF("/models/test41.glb");
   const scroll = useScroll();
@@ -81,7 +81,7 @@ export default function Mountain() {
   return (
     <>
       {/* ---------- Performance ---------- */}
-      <Perf showGraph position="top-left" colorBlind />
+      {/* <Perf showGraph position="top-left" colorBlind /> */}
       <Preload all />
 
       {/* ---------- Lights ---------- */}
