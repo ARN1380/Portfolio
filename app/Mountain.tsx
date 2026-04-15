@@ -24,7 +24,7 @@ import { useControls } from "leva";
 export default function Mountain() {
   const { ziresho } = useControls({ ziresho: 1 });
 
-  const { scene } = useGLTF("/models/test40.glb");
+  const { scene } = useGLTF("/models/test41.glb");
   const scroll = useScroll();
   const cameraRef = useRef<PerspectiveCameraType>(null);
 
