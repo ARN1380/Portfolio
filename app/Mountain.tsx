@@ -89,11 +89,11 @@ export default function Mountain() {
       {/* ---------- Lights ---------- */}
       <ambientLight intensity={1.1} />
       <directionalLight position={[10, 10, 10]} intensity={4} castShadow />
-      <Environment
+      {/* <Environment
         files="/HDRI/passendorf_snow_1k.exr"
         background={true}
         environmentIntensity={0}
-      />
+      /> */}
 
       {/* ---------- Cameras ---------- */}
       <PerspectiveCamera
