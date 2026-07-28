@@ -1,0 +1,10 @@
+{
+  "assets": [
+    "public/models/test42.glb",
+    "public/models/env-test.glb",
+    "public/models/cameraPath.json",
+    "public/models/lookatPath.json",
+    "public/models/testCurve2.json",
+    "public/draco/**"
+  ]
+}
