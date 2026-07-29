@@ -80,7 +80,7 @@ if $DRY_RUN; then
   echo "--- Project source files (excluding node_modules, .next, .git, public/models, public/HDRI): ---"
   (cd "$PROJECT_ROOT" && tar \
     --exclude='node_modules' --exclude='.next' --exclude='.git' --exclude='.env*.local' \
-    --exclude='public/models' --exclude='public/HDRI' \
+    --exclude='public/models' --exclude='public/HDRI' --exclude='.agents' \
     -cf - . | tar -tf -) 2>/dev/null | head -60
   echo ""
   echo "--- Built output (.next/): ---"
@@ -106,12 +106,12 @@ else
   echo "[4/6] Syncing project source..."
   (cd "$PROJECT_ROOT" && tar \
     --exclude='node_modules' --exclude='.next' --exclude='.git' --exclude='.env*.local' \
-    --exclude='public/models' --exclude='public/HDRI' \
+    --exclude='public/models' --exclude='public/HDRI' --exclude='.agents' \
     -cf - .) | ssh "$REMOTE_HOST" "cd '$REMOTE_PATH' && tar -xf -"
 
   echo "      Syncing built output (.next/)..."
   (cd "$PROJECT_ROOT" && tar \
-    --exclude='node_modules' --exclude='.git' \
+    --exclude='node_modules' --exclude='.git' --exclude='.next/dev' \
     -cf - .next) | ssh "$REMOTE_HOST" "cd '$REMOTE_PATH' && tar -xf -"
 
   echo "[5/6] Syncing $ASSET_COUNT asset files..."

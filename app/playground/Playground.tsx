@@ -1,12 +1,20 @@
-import { OrbitControls, useGLTF } from "@react-three/drei";
+import { OrbitControls, useGLTF, useAnimations } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useEffect } from "react";
 import { CatmullRomCurve3, Mesh, Vector3 } from "three";
 import CustomObj from "../CustomObj";
 import curvePath from "@/public/models/testCurve2.json";
 
 export default function Playground() {
-  const { scene } = useGLTF("/models/env-test.glb");
+  const { scene, animations } = useGLTF("/models/css_test2.glb");
+  const { actions } = useAnimations(animations, scene);
+
+  useEffect(() => {
+    const action = actions?.[Object.keys(actions || {})[0]];
+    if (action) {
+      action.reset().play();
+    }
+  }, [actions]);
 
   const cubeRef = useRef<Mesh>(undefined);
   const cameraRef = useRef(0);

@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "react-three-fiber": {
+      "source": "freshtechbro/claudedesignskills",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/react-three-fiber/SKILL.md",
+      "computedHash": "b118f1385a1ec24604a70a4798e0fb5534b1f09ac8d96f019706ff3902bcb5fa"
+    },
+    "threejs-lighting": {
+      "source": "cloudai-x/threejs-skills",
+      "sourceType": "github",
+      "skillPath": "skills/threejs-lighting/SKILL.md",
+      "computedHash": "7adc319af73a15ce16b94c83aafe0bcca7b8ef17d9fb263d75a937b9670f1772"
+    }
+  }
+}
